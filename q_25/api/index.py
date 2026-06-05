@@ -1,5 +1,4 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request, Response
 from pydantic import BaseModel
 from typing import List
 import json
@@ -8,14 +7,18 @@ import os
 
 app = FastAPI()
 
-# Enable CORS for POST requests from any origin
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Custom middleware to guarantee CORS headers on every single response (including OPTIONS preflight)
+@app.middleware("http")
+async def add_cors_headers(request: Request, call_next):
+    if request.method == "OPTIONS":
+        response = Response(status_code=200)
+    else:
+        response = await call_next(request)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    response.headers["access-control-allow-origin"]="*"
+    return response
 
 class TelemetryRequest(BaseModel):
     regions: List[str]
