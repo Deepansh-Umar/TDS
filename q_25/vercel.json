@@ -8,6 +8,13 @@
   "routes": [
     {
       "src": "/(.*)",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+        "access-control-allow-origin": "*",
+        "access-control-allow-methods": "GET,POST,OPTIONS",
+        "access-control-allow-headers": "*"
+      },
       "dest": "api/index.py"
     }
   ]
