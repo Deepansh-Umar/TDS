@@ -8,17 +8,14 @@ import os
 app = FastAPI()
 
 # Custom middleware to guarantee CORS headers on every single response (including OPTIONS preflight)
-@app.middleware("http")
-async def add_cors_headers(request: Request, call_next):
-    if request.method == "OPTIONS":
-        response = Response(status_code=200)
-    else:
-        response = await call_next(request)
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "*"
-    response.headers["access-control-allow-origin"]="*"
-    return response
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class TelemetryRequest(BaseModel):
     regions: List[str]
@@ -84,18 +81,41 @@ def process_analytics(req: TelemetryRequest):
         
     return results
 
+from fastapi.responses import JSONResponse
+
+def make_cors_response(content):
+    response = JSONResponse(content=content)
+    response.raw_headers.append((b"access-control-allow-origin", b"*"))
+    response.raw_headers.append((b"access-control-allow-methods", b"*"))
+    response.raw_headers.append((b"access-control-allow-headers", b"*"))
+    
+    return response
+
+@app.options("/")
+@app.options("/analytics")
+@app.options("/api/analytics")
+def options_endpoint():
+    response = Response(status_code=200)
+    response.raw_headers.append((b"access-control-allow-origin", b"*"))
+    response.raw_headers.append((b"access-control-allow-methods", b"*"))
+    response.raw_headers.append((b"access-control-allow-headers", b"*"))
+    response.raw_headers.append((b"Access-Control-Allow-Origin", b"*"))
+    response.raw_headers.append((b"Access-Control-Allow-Methods", b"*"))
+    response.raw_headers.append((b"Access-Control-Allow-Headers", b"*"))
+    return response
+
 @app.get("/")
 def read_root():
-    return {"message": "Telemetry API is running. Send a POST request to /analytics"}
+    return make_cors_response({"message": "Telemetry API is running. Send a POST request to /analytics"})
 
 @app.post("/")
 def post_root(req: TelemetryRequest):
-    return process_analytics(req)
+    return make_cors_response(process_analytics(req))
 
 @app.post("/analytics")
 def post_analytics(req: TelemetryRequest):
-    return process_analytics(req)
+    return make_cors_response(process_analytics(req))
 
 @app.post("/api/analytics")
 def post_api_analytics(req: TelemetryRequest):
-    return process_analytics(req)
+    return make_cors_response(process_analytics(req))
