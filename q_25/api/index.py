@@ -7,15 +7,7 @@ import os
 
 app = FastAPI()
 
-# Custom middleware to guarantee CORS headers on every single response (including OPTIONS preflight)
-from fastapi.middleware.cors import CORSMiddleware
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# We let vercel.json handle CORS header injection at the edge to avoid duplicate header values.
 
 class TelemetryRequest(BaseModel):
     regions: List[str]
@@ -84,25 +76,13 @@ def process_analytics(req: TelemetryRequest):
 from fastapi.responses import JSONResponse
 
 def make_cors_response(content):
-    response = JSONResponse(content=content)
-    response.raw_headers.append((b"access-control-allow-origin", b"*"))
-    response.raw_headers.append((b"access-control-allow-methods", b"*"))
-    response.raw_headers.append((b"access-control-allow-headers", b"*"))
-    
-    return response
+    return JSONResponse(content=content)
 
 @app.options("/")
 @app.options("/analytics")
 @app.options("/api/analytics")
 def options_endpoint():
-    response = Response(status_code=200)
-    response.raw_headers.append((b"access-control-allow-origin", b"*"))
-    response.raw_headers.append((b"access-control-allow-methods", b"*"))
-    response.raw_headers.append((b"access-control-allow-headers", b"*"))
-    response.raw_headers.append((b"Access-Control-Allow-Origin", b"*"))
-    response.raw_headers.append((b"Access-Control-Allow-Methods", b"*"))
-    response.raw_headers.append((b"Access-Control-Allow-Headers", b"*"))
-    return response
+    return Response(status_code=204)
 
 @app.get("/")
 def read_root():
