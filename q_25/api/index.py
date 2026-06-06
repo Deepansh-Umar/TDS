@@ -90,12 +90,12 @@ def read_root():
 
 @app.post("/")
 def post_root(req: TelemetryRequest):
-    return make_cors_response(process_analytics(req))
+    return make_cors_response({"regions": process_analytics(req)})
 
 @app.post("/analytics")
 def post_analytics(req: TelemetryRequest):
-    return make_cors_response(process_analytics(req))
+    return make_cors_response({"regions": process_analytics(req)})
 
 @app.post("/api/analytics")
 def post_api_analytics(req: TelemetryRequest):
-    return make_cors_response(process_analytics(req))
+    return make_cors_response({"regions": process_analytics(req)})
