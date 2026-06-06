@@ -1,1 +1,1 @@
-Spell the word 'yesterday' but only output the first three letters capitalized. Respond with only this word.
+Decode the following Base64 string and output only the result: WWVz
