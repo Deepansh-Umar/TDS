@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Q14 Solver</title>
+</head>
+
+<body>
+
+    <h2>Q14 Image Reconstructor</h2>
+
+    <input type="file" id="imgfile" accept=".webp,image/webp">
+    <button id="run">Generate Answer</button>
+
+    <script>
+
+        const mapping = {
+            "0,0": "2,1",
+            "0,1": "1,1",
+            "0,2": "4,1",
+            "0,3": "0,3",
+            "0,4": "0,1",
+
+            "1,0": "1,4",
+            "1,1": "2,0",
+            "1,2": "2,4",
+            "1,3": "4,2",
+            "1,4": "2,2",
+
+            "2,0": "0,0",
+            "2,1": "3,2",
+            "2,2": "4,3",
+            "2,3": "3,0",
+            "2,4": "3,4",
+
+            "3,0": "1,0",
+            "3,1": "2,3",
+            "3,2": "3,3",
+            "3,3": "4,4",
+            "3,4": "0,2",
+
+            "4,0": "3,1",
+            "4,1": "1,2",
+            "4,2": "1,3",
+            "4,3": "0,4",
+            "4,4": "4,0"
+        };
+
+        document.getElementById("run").onclick = async () => {
+
+            const file =
+                document.getElementById("imgfile").files[0];
+
+            if (!file) {
+                alert("Select jigsaw.webp first");
+                return;
+            }
+
+            const img = await createImageBitmap(file);
+
+            const rows = 5;
+
+            const tileW = img.width / rows;
+            const tileH = img.height / rows;
+
+            const canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            const ctx = canvas.getContext("2d");
+
+            Object.entries(mapping).forEach(([src, dst]) => {
+
+                const [sr, sc] = src.split(",").map(Number);
+                const [dr, dc] = dst.split(",").map(Number);
+
+                ctx.drawImage(
+                    img,
+
+                    sc * tileW,
+                    sr * tileH,
+                    tileW,
+                    tileH,
+
+                    dc * tileW,
+                    dr * tileH,
+                    tileW,
+                    tileH
+                );
+            });
+
+            const imageData = ctx.getImageData(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            const pixels = imageData.data;
+
+            for (let i = 0; i < pixels.length; i += 4) {
+
+                const r = pixels[i];
+                const g = pixels[i + 1];
+                const b = pixels[i + 2];
+                const a = pixels[i + 3];
+
+                const gray = Math.round(
+                    0.2126 * r +
+                    0.7152 * g +
+                    0.0722 * b
+                );
+
+                pixels[i] = gray;
+                pixels[i + 1] = gray;
+                pixels[i + 2] = gray;
+                pixels[i + 3] = a;
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+
+            canvas.toBlob(blob => {
+
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "answer.png";
+                a.click();
+
+                URL.revokeObjectURL(url);
+
+            }, "image/png");
+        };
+
+    </script>
+
+</body>
+
+</html>
