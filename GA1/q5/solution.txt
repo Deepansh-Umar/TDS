@@ -1,0 +1,60 @@
+Step-by-Step Solution for Question 5: Reorganize Files with Shell Commands
+
+Overview:
+The task is to reorganize 30 text files scattered across nested directories, flattening the structure and grouping them into folders by their category tag. The category is specified on the first line of each file in the format "category: {category-name}".
+
+Step 1: Extract the ZIP Archive
+Extract the "files_to_reorganize.zip" into a directory of your choice.
+On Linux/macOS:
+$ unzip files_to_reorganize.zip -d extracted
+
+On Windows (PowerShell):
+PS> Expand-Archive -Path files_to_reorganize.zip -DestinationPath extracted
+
+Step 2: Create a Shell Script to Reorganize the Files
+Write a script (e.g. reorganize.sh) inside the extracted directory to automate the process.
+
+=== Shell Script Solution (bash) ===
+#!/bin/bash
+
+# Ensure we process spaces and unicode characters correctly by using double quotes
+# Loop through all text files in the nested structure
+find . -type f -name "*.txt" | while read -r file; do
+  # Step 2a: Extract the category from the first line matching "^category:"
+  # We use tr -d '\r' to strip Windows line endings if any are present
+  category=$(grep -m 1 "^category:" "$file" | cut -d' ' -f2- | tr -d '\r')
+  
+  # Ensure the category string is not empty
+  if [ -n "$category" ]; then
+    # Step 2b: Create the category directory if it doesn't already exist
+    mkdir -p "$category"
+    
+    # Step 2c: Remove the leading './' from the file path
+    relpath=$(echo "$file" | sed 's|^\./||')
+    
+    # Step 2d: Convert all path separators (slashes) to dashes
+    newname=$(echo "$relpath" | tr '/' '-')
+    
+    # Step 2e: Move and rename the file into the category folder
+    mv "$file" "$category/$newname"
+  fi
+done
+
+# Step 2f: Clean up all empty original directories
+find . -type d -empty -delete
+
+# Step 2g: Clean up README.md or other non-txt files if they were present
+# so that they do not affect the final hash
+rm -f README.md
+====================================
+
+Step 3: Generate the Verification Hash
+To verify that the file renaming and sorting have been done correctly, run the following command in the terminal inside your target directory:
+
+$ find . -type f | LC_ALL=C sort | sha256sum
+
+Explanation of the command:
+- `find . -type f` lists all reorganized files.
+- `LC_ALL=C sort` performs a standard ASCII byte-by-byte sort on the list, ensuring consistency across different locales.
+- `sha256sum` calculates the SHA-256 hash of the sorted file list text.
+Submit this calculated hash value as your answer.

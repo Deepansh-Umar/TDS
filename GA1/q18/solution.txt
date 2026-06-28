@@ -1,0 +1,21 @@
+Step-by-Step Solution for Question 18: Author a deployment architecture markdown
+
+Scenario:
+Draft an architecture note in Markdown titled "Project [PROJECT_NAME] Deployment" covering how a data product moves from staging to production. Document the edge cache, API tier, and background workers.
+
+Step 1: Check Required Elements
+Make sure the markdown contains all required elements:
+1. H1 heading: "Project [PROJECT_NAME] Deployment" (replace with the name specified in the question)
+2. A mermaid diagram showing nodes for edge cache, API tier, and workers as specified in your card
+3. Inline code snippet showing the deployment command (e.g. `uv deploy [project_name_lowercase]`)
+4. A GFM task list with at least one checked (- [x]) and one unchecked (- [ ]) item
+5. A table summarising tiers, responsibility, and scaling plans
+6. A callout block quote starting with "> [!NOTE]" or "> [!IMPORTANT]" referencing your unique guardrail token
+7. The footnote reference and its definition describing an audit step as specified in your card
+8. Bold, italic, strikethrough text, at least one hyperlink, and the guardrail token somewhere in prose.
+
+Step 2: Compose the Markdown Document
+Draft the markdown file with your specific values.
+
+Step 3: Paste the Markdown Document
+Copy the drafted markdown text and paste it into the input area.

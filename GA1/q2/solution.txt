@@ -1,0 +1,33 @@
+Step-by-Step Solution for Question 2: Multi-cursor edits to convert to JSON
+
+Task:
+Convert the contents of "q-multi-cursor-json.txt" into a single JSON object where `key=value` pairs are converted into `{"key": "value", "key": "value", ...}`. 
+Then, calculate the hash by pasting the resulting JSON at the hash tool.
+
+Step 1: Open the file in Visual Studio Code
+Open "q-multi-cursor-json.txt" in VS Code.
+
+Step 2: Use Multi-cursors to Format to JSON
+To quickly convert all `key=value` lines into JSON:
+1. Position your cursor on the first line.
+2. Select all lines using Multi-cursors:
+   - On Windows: Press Ctrl + Alt + Down Arrow (or Alt + Click on each line, or select a block and press Shift + Alt + I).
+3. With cursors on all lines:
+   - Move to the beginning of the line, type double quotes (`"`), move past the key, type double quotes (`"`), type a colon (`:`), and then surround the value with double quotes (`"`).
+   - For example: `key=value` becomes `"key": "value"`.
+   - Ensure all key=value pairs are formatted as `"key": "value"`.
+   - Move to the end of the line and type a comma (`,`).
+4. Remove the trailing comma (`,`) on the very last line.
+5. Wrap the entire contents in curly braces `{` at the top and `}` at the bottom.
+
+Step 3: Pasting and Hashing the JSON
+1. Copy the formatted JSON from VS Code. It should look like:
+{
+  "key1": "value1",
+  "key2": "value2",
+  ...
+}
+2. Go to the website: https://tools-in-data-science.pages.dev/jsonhash
+3. Paste your JSON in the input area and click the "Hash" button.
+4. The page will parse and hash the JSON (automatically ordering keys according to standard JavaScript object serialization behavior).
+5. Copy the resulting SHA-256 hash and submit it as the answer.

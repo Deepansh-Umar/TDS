@@ -1,0 +1,44 @@
+Step-by-Step Solution for Question 6: Record Terminal Session with asciinema
+
+Overview:
+The task is to record a terminal session showing Python version check, running python inline calculation (2 + 2), and showing the date in YYYY-MM-DD format. The session must start with printing your unique session marker (e.g. SESSION_XXXXXXXX).
+
+Step 1: Install/use asciinema
+If you have 'uvx' (uv tool runner) installed, you can run asciinema recorder on-demand without installing.
+Otherwise, install asciinema globally using pip:
+$ pip install asciinema
+
+Step 2: Start the Recording
+Start recording your terminal session to a file named "session.cast":
+$ uvx asciinema rec session.cast
+(Or simply `asciinema rec session.cast` if installed globally)
+
+Step 3: Execute the Required Commands in Order
+Run the following commands exactly in this order:
+
+1. Print your unique session marker (replace with your actual marker shown in the card):
+$ echo '[YOUR_SESSION_MARKER]'
+
+2. Check python version:
+$ python --version
+
+3. Run python simple addition:
+$ echo 'print(2 + 2)' | python
+
+4. Print current date in YYYY-MM-DD format:
+$ date +%Y-%m-%d
+
+Step 4: Stop the Recording
+Press Ctrl+D (or type `exit` and hit Enter) to stop recording and save the `session.cast` file.
+
+Step 5: Verify and Submit
+The resulting `session.cast` file is a plain-text file in JSON lines format. You can copy the contents of the file and paste it into the answer area.
+
+=== Example session.cast Structure ===
+{"version": 2, "width": 110, "height": 30, "timestamp": 1719572400, "env": {"SHELL": "/bin/bash", "TERM": "xterm-256color"}}
+[0.1, "o", "user@developer-vm:~$ echo '[YOUR_SESSION_MARKER]'\\r\\n[YOUR_SESSION_MARKER]\\r\\n"]
+[0.5, "o", "user@developer-vm:~$ python --version\\r\\nPython 3.12.3\\r\\n"]
+[1.2, "o", "user@developer-vm:~$ echo 'print(2 + 2)' | python\\r\\n4\\r\\n"]
+[1.8, "o", "user@developer-vm:~$ date +%Y-%m-%d\\r\\n2026-06-28\\r\\n"]
+[2.5, "o", "user@developer-vm:~$ exit\\r\\n"]
+======================================

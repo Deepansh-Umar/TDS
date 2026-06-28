@@ -1,0 +1,26 @@
+Step-by-Step Solution for Question 14: Extract JSON from a ZIP
+
+Scenario:
+You are a data analyst at eShopCo, tasked with validating the automated sales figures for the specified period and region. You need to extract "sales.json" from "monthly_sales.zip" and find the value of "total_sales".
+
+Step 1: Download the ZIP File
+Download the `monthly_sales.zip` file.
+
+Step 2: Extract the ZIP File
+Extract/unzip the contents of the ZIP archive.
+On Windows (PowerShell):
+PS> Expand-Archive -Path monthly_sales.zip -DestinationPath extracted_sales
+
+Step 3: Locate and Inspect sales.json
+Inside the extracted folder, find the `sales.json` file and open it.
+On Windows (PowerShell):
+PS> Get-Content -Path extracted_sales\sales.json
+
+The file is structured like:
+{"month": "YYYY-MM", "region": "RegionName", "total_sales": "value"}
+
+Step 4: Retrieve the total_sales Value
+Read the value of the `total_sales` field.
+
+Step 5: Submit the Value
+Enter the retrieved value into the answer field.

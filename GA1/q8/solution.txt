@@ -1,0 +1,36 @@
+Step-by-Step Solution for Question 8: Git Time Travel: History Investigation
+
+Scenario:
+Investigate a production incident by identifying when a configuration change (specifically setting the "timeout" value in config.json to the target value) was introduced. You need to find the commit where this was done and retrieve the 7-character short hash of its parent commit.
+
+Step 1: Download and Extract the Repository
+Download "q-git-time-travel.zip" and extract it locally.
+On Windows (PowerShell):
+PS> Expand-Archive -Path q-git-time-travel.zip -DestinationPath git-repo
+
+Step 2: Explore the Commit History
+Navigate into the repository folder (e.g. `cd git-repo`) and search the git history for the string "timeout" or check the diffs.
+
+Useful git commands:
+1. Search all commit diffs for the text "timeout":
+$ git log -S "timeout" --oneline
+
+2. Find the commits that modified `config.json`:
+$ git log --follow --oneline config.json
+
+3. Show the changes in a specific commit to find where the timeout was set to the target value (e.g. 240):
+$ git show <commit-hash>
+
+Step 3: Locate the Specific Commit
+Through investigation, locate the commit that changes the `timeout` value in `config.json` to the target value.
+
+Step 4: Find the Parent Commit
+To find the parent commit of that commit, run:
+$ git show <commit-hash>~1 --oneline
+or
+$ git log --pretty=%P -n 1 <commit-hash>
+
+This outputs the parent commit hash.
+
+Step 5: Get the 7-character Short Hash of the Parent Commit
+Take the first 7 characters of the parent commit hash and enter it into the answer field.
